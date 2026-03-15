@@ -7,62 +7,81 @@
 <style>
 
 body{
-    font-family: Arial, sans-serif;
-    margin:0;
-    background:#f5f5f5;
+font-family: Arial, sans-serif;
+background:#f2f6f5;
+margin:0;
 }
 
 header{
-    background:#1b5e20;
-    color:white;
-    text-align:center;
-    padding:30px;
+background:#2e7d32;
+color:white;
+text-align:center;
+padding:25px;
 }
 
-main{
-    width:600px;
-    margin:40px auto;
-    background:white;
-    padding:30px;
-    border-radius:8px;
+.container{
+width:900px;
+margin:auto;
+padding:30px;
 }
 
-h2{
-    margin-top:0;
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+margin-bottom:25px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
 }
 
 label{
-    display:block;
-    margin-top:15px;
+display:block;
+margin-top:10px;
 }
 
 input{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
+width:100%;
+padding:8px;
+margin-top:5px;
 }
 
 button{
-    margin-top:20px;
-    padding:12px;
-    width:100%;
-    background:#43a047;
-    color:white;
-    border:none;
-    font-size:16px;
+margin-top:20px;
+padding:12px;
+width:100%;
+background:#43a047;
+color:white;
+border:none;
+border-radius:5px;
+font-size:16px;
 }
 
-.result{
-    margin-top:25px;
-    background:#e8f5e9;
-    padding:15px;
-    border-radius:5px;
+button:hover{
+background:#388e3c;
 }
 
-.info{
-    margin-top:30px;
-    font-size:14px;
-    color:#444;
+.results{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+margin-top:20px;
+}
+
+.result-card{
+background:#e8f5e9;
+padding:15px;
+border-radius:8px;
+text-align:center;
+}
+
+.result-number{
+font-size:24px;
+font-weight:bold;
 }
 
 </style>
@@ -72,53 +91,92 @@ button{
 
 <header>
 <h1>Calculadora de Huella de Carbono</h1>
-<p>Estimación de emisiones personales de CO₂</p>
+<p>Estimación de emisiones personales</p>
 </header>
 
-<main>
+<div class="container">
 
-<h2>Datos de consumo</h2>
+<div class="card">
 
-<label>Kilómetros recorridos en automóvil por semana</label>
-<input id="km" type="number">
+<h2>Emisiones directas</h2>
 
-<label>Electricidad consumida al mes (kWh)</label>
-<input id="kwh" type="number">
+<label>Kilómetros en coche por semana</label>
+<input id="carro" type="number">
+
+<label>Gas doméstico (kWh por mes)</label>
+<input id="gas" type="number">
+
+</div>
+
+<div class="card">
+
+<h2>Emisiones indirectas</h2>
+
+<label>Electricidad (kWh por mes)</label>
+<input id="electricidad" type="number">
+
+<label>Kilómetros en transporte público</label>
+<input id="bus" type="number">
+
+</div>
+
+<div class="card">
 
 <button onclick="calcular()">Calcular huella</button>
 
-<div class="result" id="resultado"></div>
+<div class="results">
 
-<div class="info">
-<p>Los cálculos se basan en factores de emisión promedio utilizados en estudios climáticos como los reportados por el
-:contentReference[oaicite:0]{index=0}.</p>
+<div class="result-card">
+<p>Emisiones directas</p>
+<div class="result-number" id="directas">0</div>
+kg CO₂
 </div>
 
-</main>
+<div class="result-card">
+<p>Emisiones indirectas</p>
+<div class="result-number" id="indirectas">0</div>
+kg CO₂
+</div>
+
+<div class="result-card">
+<p>Total</p>
+<div class="result-number" id="total">0</div>
+kg CO₂
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
 
 function calcular(){
 
-let km = Number(document.getElementById("km").value);
-let kwh = Number(document.getElementById("kwh").value);
+let carro = Number(document.getElementById("carro").value);
+let gas = Number(document.getElementById("gas").value);
+let electricidad = Number(document.getElementById("electricidad").value);
+let bus = Number(document.getElementById("bus").value);
 
-let factorAuto = 0.192;
-let factorElectricidad = 0.233;
+/* factores de emisión */
 
-let emisionesAuto = km * factorAuto;
-let emisionesElectricidad = kwh * factorElectricidad;
+let f_carro = 0.192;
+let f_gas = 0.202;
+let f_electricidad = 0.233;
+let f_bus = 0.105;
 
-let mensual = emisionesAuto * 4 + emisionesElectricidad;
-let anual = mensual * 12;
+/* cálculos */
 
-let arboles = anual / 21;
+let directas = (carro * f_carro) + (gas * f_gas);
+let indirectas = (electricidad * f_electricidad) + (bus * f_bus);
+let total = directas + indirectas;
 
-document.getElementById("resultado").innerHTML =
-"<b>Emisiones mensuales:</b> " + mensual.toFixed(2) + " kg CO₂<br>" +
-"<b>Emisiones anuales:</b> " + anual.toFixed(2) + " kg CO₂<br><br>" +
-"Para compensar estas emisiones se necesitarían aproximadamente <b>" +
-arboles.toFixed(1) + " árboles</b>.";
+/* mostrar resultados */
+
+document.getElementById("directas").innerText = directas.toFixed(2);
+document.getElementById("indirectas").innerText = indirectas.toFixed(2);
+document.getElementById("total").innerText = total.toFixed(2);
 
 }
 
