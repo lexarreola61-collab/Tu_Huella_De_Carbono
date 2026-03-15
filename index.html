@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Calculadora de Huella de Carbono</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background:#f5f5f5;
+}
+
+header{
+    background:#1b5e20;
+    color:white;
+    text-align:center;
+    padding:30px;
+}
+
+main{
+    width:600px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:8px;
+}
+
+h2{
+    margin-top:0;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+}
+
+button{
+    margin-top:20px;
+    padding:12px;
+    width:100%;
+    background:#43a047;
+    color:white;
+    border:none;
+    font-size:16px;
+}
+
+.result{
+    margin-top:25px;
+    background:#e8f5e9;
+    padding:15px;
+    border-radius:5px;
+}
+
+.info{
+    margin-top:30px;
+    font-size:14px;
+    color:#444;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Calculadora de Huella de Carbono</h1>
+<p>Estimación de emisiones personales de CO₂</p>
+</header>
+
+<main>
+
+<h2>Datos de consumo</h2>
+
+<label>Kilómetros recorridos en automóvil por semana</label>
+<input id="km" type="number">
+
+<label>Electricidad consumida al mes (kWh)</label>
+<input id="kwh" type="number">
+
+<button onclick="calcular()">Calcular huella</button>
+
+<div class="result" id="resultado"></div>
+
+<div class="info">
+<p>Los cálculos se basan en factores de emisión promedio utilizados en estudios climáticos como los reportados por el
+:contentReference[oaicite:0]{index=0}.</p>
+</div>
+
+</main>
+
+<script>
+
+function calcular(){
+
+let km = Number(document.getElementById("km").value);
+let kwh = Number(document.getElementById("kwh").value);
+
+let factorAuto = 0.192;
+let factorElectricidad = 0.233;
+
+let emisionesAuto = km * factorAuto;
+let emisionesElectricidad = kwh * factorElectricidad;
+
+let mensual = emisionesAuto * 4 + emisionesElectricidad;
+let anual = mensual * 12;
+
+let arboles = anual / 21;
+
+document.getElementById("resultado").innerHTML =
+"<b>Emisiones mensuales:</b> " + mensual.toFixed(2) + " kg CO₂<br>" +
+"<b>Emisiones anuales:</b> " + anual.toFixed(2) + " kg CO₂<br><br>" +
+"Para compensar estas emisiones se necesitarían aproximadamente <b>" +
+arboles.toFixed(1) + " árboles</b>.";
+
+}
+
+</script>
+
+</body>
+</html>
