@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>Calculadora de Huella de Carbono</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f1f8f6;
+margin:0;
+color:#2f3e2f;
+}
+
+header{
+background:linear-gradient(135deg,#2e7d32,#66bb6a);
+color:white;
+text-align:center;
+padding:30px;
+}
+
+.container{
+width:900px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 6px 15px rgba(0,0,0,0.08);
+margin-bottom:25px;
+border-left:6px solid #66bb6a;
+}
+
+label{
+display:block;
+margin-top:10px;
+}
+
+input, select{
+width:100%;
+padding:8px;
+margin-top:5px;
+}
+
+button{
+margin-top:20px;
+padding:12px;
+width:100%;
+background:#43a047;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#2e7d32;
+}
+
+.results{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+margin-top:20px;
+}
+
+.result-card{
+background:#e8f5e9;
+padding:18px;
+border-radius:10px;
+text-align:center;
+border:1px solid #c8e6c9;
+}
+
+.result-number{
+font-size:28px;
+font-weight:bold;
+color:#2e7d32;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Calculadora de Huella de Carbono</h1>
+<p>Estimación de emisiones personales</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Consumo eléctrico diario</h2>
+
+<label>Horas de laptop al día</label>
+<input id="laptop" type="number">
+
+<label>Horas de TV al día</label>
+<input id="tv" type="number">
+
+<label>Número de focos LED</label>
+<input id="focos" type="number">
+
+<label>Cargas de celular por día</label>
+<input id="celular" type="number">
+
+<label>¿Tienes refrigerador?</label>
+<select id="refri">
+<option value="1">Sí</option>
+<option value="0">No</option>
+</select>
+
+</div>
+
+<div class="card">
+
+<h2>Uso de gas doméstico</h2>
+
+<label>Minutos de estufa al día</label>
+<input id="estufa" type="number">
+
+<label>Veces que usas agua caliente al día</label>
+<input id="boiler" type="number">
+
+<label>¿Tienes secadora de gas?</label>
+<select id="secadora">
+<option value="1">Sí</option>
+<option value="0">No</option>
+</select>
+
+</div>
+
+<div class="card">
+
+<button onclick="calcular()">Calcular huella</button>
+
+<div class="results">
+
+<div class="result-card">
+<p>Electricidad</p>
+<div class="result-number" id="electricidad">0</div>
+kg CO₂
+</div>
+
+<div class="result-card">
+<p>Gas doméstico</p>
+<div class="result-number" id="gas">0</div>
+kg CO₂
+</div>
+
+<div class="result-card">
+<p>Total</p>
+<div class="result-number" id="total">0</div>
+kg CO₂
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function calcular(){
+
+/* ELECTRICIDAD */
+
+let laptop = Number(document.getElementById("laptop").value);
+let tv = Number(document.getElementById("tv").value);
+let focos = Number(document.getElementById("focos").value);
+let celular = Number(document.getElementById("celular").value);
+let refri = Number(document.getElementById("refri").value);
+
+let p_laptop = 50;
+let p_tv = 100;
+let p_foco = 10;
+let p_celular = 5;
+let p_refri = 150;
+
+let e_laptop = (p_laptop * laptop) / 1000;
+let e_tv = (p_tv * tv) / 1000;
+let e_focos = (p_foco * focos * 5) / 1000;
+let e_celular = (p_celular * celular * 2) / 1000;
+let e_refri = (p_refri * 24 * refri) / 1000;
+
+let energiaTotal = e_laptop + e_tv + e_focos + e_celular + e_refri;
+
+let emisionesElectricidad = energiaTotal * 0.233;
+
+
+/* GAS */
+
+let estufa = Number(document.getElementById("estufa").value);
+let boiler = Number(document.getElementById("boiler").value);
+let secadora = Number(document.getElementById("secadora").value);
+
+let g_estufa = estufa * 0.03;
+let g_boiler = boiler * 0.2;
+let g_secadora = secadora * 1.5;
+
+let emisionesGas = g_estufa + g_boiler + g_secadora;
+
+
+/* TOTAL */
+
+let total = emisionesElectricidad + emisionesGas;
+
+document.getElementById("electricidad").innerText = emisionesElectricidad.toFixed(2);
+document.getElementById("gas").innerText = emisionesGas.toFixed(2);
+document.getElementById("total").innerText = total.toFixed(2);
+
+}
+
+</script>
+
+</body>
+</html>
